@@ -6,11 +6,168 @@
 </head>
 <body>
 
+<p id="demo1"></p>
+<p id="demo2"></p>
+
+<br>
+
+<table border="1">
+    <tr >
+        <th>Center Name</th>
+        <th>Vaccine Type </th>
+		<th>Age Limit </th>
+        <th> Dose#1</th>
+        <th> Dose#2</th>
+		 <th>Date</th>
+		  <th>Pincode</th>
+    </tr>
+
+    <tr >
+        <td> <p id="vac_cent_name"></p></td>
+        <td> <p id="vac_type"></p></td>
+		   <td> <p id="vac_age_limit"></p></td>
+        <td> <p id="vac_dose_1"></p></td>
+        <td> <p id="vac_dose_2"></p></td>
+		<td> <p id="vac_date"></p></td>
+		<td> <p id="pincode_vac"></p></td>
+    </tr>
+
+</table>
+
+<script>
+myFunction();
+
+function myFunction() {
+ // var carName = "Volvo";
+  //document.getElementById("demo1").innerHTML = carName;
+  
+  
+  $.ajax({
+
+   // url: "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id=725&date=01-06-2021",
+	url: "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id=725&date="+presentDate(),
+    dataType: "json",
+    crossDomain:true,
+    success: function( response ) {
+    	var stringResponse= JSON.parse(JSON.stringify(response));
+		
+		var nameVacArray =[]; 
+		var vacTypeArray =[]; 
+		var minAgeLimitArray =[]; 
+		
+		var dose1Array =[]; 
+		var dose2Array =[]; 
+		var vacDateArray =[]; 
+		var pincodeVacArray=[];
+		
+		for (var i = 0; i < stringResponse.centers.length; i++) 
+		{ 
+		
+				if (stringResponse.centers[i].fee_type =='Paid')
+				{
+						for(var j = 0; j < stringResponse.centers[i].sessions.length; j++)
+						{
+						
+							var nameVac= stringResponse.centers[i].name;
+							var vacType= stringResponse.centers[i].sessions[j].vaccine;
+							var minAgeLimit= stringResponse.centers[i].sessions[j].min_age_limit;
+							
+							var dose1= stringResponse.centers[i].sessions[j].available_capacity_dose1;
+							var dose2= stringResponse.centers[i].sessions[j].available_capacity_dose2;
+							var vacDate= stringResponse.centers[i].sessions[j].date;
+							var pincodeVac= stringResponse.centers[i].pincode;
+							
+							
+							
+							
+							console.log("Name = "+stringResponse.centers[i].name +" --Fee Type -= "+stringResponse.centers[i].fee_type 
+							+"---- Vaccine Type ="+stringResponse.centers[i].sessions[j].vaccine
+							+"---Dose1 -"+stringResponse.centers[i].sessions[j].available_capacity_dose1
+							+"---Dose2 -"+stringResponse.centers[i].sessions[j].available_capacity_dose2);
+							
+										if(dose1 >0 || dose2>0 )
+										{
+										
+										nameVacArray.push(nameVac+"##");
+										nameVacArray.push("<br/>");
+										
+										vacTypeArray.push(vacType);
+										vacTypeArray.push("<br/>");
+										
+										minAgeLimitArray.push(minAgeLimit);
+										minAgeLimitArray.push("<br/>");
+										
+										dose1Array.push(dose1);
+										dose1Array.push("<br/>");
+										
+										dose2Array.push(dose2);
+										dose2Array.push("<br/>");
+										
+										vacDateArray.push(vacDate);
+										vacDateArray.push("<br/>");
+										
+										pincodeVacArray.push(pincodeVac);
+										pincodeVacArray.push("<br/>");
+
+											
+										} //End Of  2nd IF
+								
+							
+							
+							
+						} //End of 2nd FOR
+			
+			
+		
+				}//End of 1st IF	
+		
+		}//End Of 1st FOR
+		
+		 document.getElementById("vac_cent_name").innerHTML = nameVacArray;	
+		 document.getElementById("vac_type").innerHTML = vacTypeArray;
+		document.getElementById("vac_age_limit").innerHTML = minAgeLimitArray;
+		document.getElementById("vac_dose_1").innerHTML = dose1Array;
+		document.getElementById("vac_dose_2").innerHTML = dose2Array;
+		document.getElementById("vac_date").innerHTML = vacDateArray;
+		document.getElementById("pincode_vac").innerHTML = pincodeVacArray;
+		
+		
+      <!--console.log("ppa= "+stringResponse.centers[0].name ); -->
+      <!-- document.getElementById("demo2").innerHTML = stringResponse.report.country; -->
+       
+    }
+
+});
+}
+
+
+function presentDate() {
+var date = new Date()
+  var yyyy = date.getFullYear().toString();
+  var mm = (date.getMonth()+1).toString();
+  var dd  = date.getDate().toString();
+
+  var mmChars = mm.split('');
+  var ddChars = dd.split('');
+
+  return (ddChars[1]?dd:"0"+ddChars[0]) +'-'+ (mmChars[1]?mm:"0"+mmChars[0])+ '-' +yyyy;
+  
+}
+
+</script>
+
+
+
+<br>
+
+
+<!--
+<button type="button" id="vcButton">Vaccine</button>
 <font color="red"><b>Corona Tracker By Country</b> </font> <br>
+
 <input type="text" id="myInput">
-<button type="button" id="myBtn">Country</button>
-
-
+<button type="button" id="myBtn">Country</button> 
+<input type="button" id="myBtn" value="Country"/>
 <br>
 <img id="my_image" src="" />
 <table border="1">
@@ -31,7 +188,8 @@
 </table>
 <font color="grey">** Supporting any country like India,US,France,Germany,Italy,China,Brazil,Australia etc.</font>
 <br>
-<font color="blue"> &#169; Contact me at rabi007007@gmail.com </font>
+-->
+<font color="blue"> &#169; Power by  রবি  </font>
 
 <script type="text/javascript">
 
@@ -42,13 +200,20 @@ $(document).ready(function(){
     $("#myBtn").click(function(){
         var countryName = $("#myInput").val();
        // alert(str);
-       showCountryStatus1(countryName);
+       //showCountryStatus1(countryName);
+	     showCountryStatus2(countryName);
 
     });
 });
 
-function showCountryStatus1(countryName)
+function showCountryStatus2(countryName)
 {
+alert('Hi')gggggggggggggggggggg;
+}
+
+/*function showCountryStatus1(countryName)
+{
+
 $.ajax({
 
     url: "https://covid19-server.chrismichael.now.sh/api/v1/ReportsByCountries/"+countryName,
@@ -67,10 +232,4 @@ $.ajax({
     }
 
 });
-}
-
-
-</script>
-
-</body>
-</html>
+}*/
